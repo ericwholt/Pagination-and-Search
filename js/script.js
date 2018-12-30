@@ -100,4 +100,14 @@ function appendPageLinks() {
   showPage(Number(document.querySelector(".active").textContent));
 }
 appendPageLinks();
+const paginationDiv = document.querySelector(".pagination");
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
+paginationDiv.addEventListener("click", e => {
+  e.preventDefault();
+  const links = document.getElementsByTagName("a");
+  for (let i = 0; i < links.length; i++) {
+    links[i].className = "";
+  }
+  e.target.className = "active";
+  showPage(Number(e.target.textContent));
+});
