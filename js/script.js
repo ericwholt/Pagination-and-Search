@@ -17,24 +17,55 @@ FSJS project 2 - List Filter and Pagination
 ***/
 const mainPage = document.querySelector(".page");
 const studentList = document.getElementsByTagName("li");
+const studentName = document.getElementsByTagName("h3");
 
-/*** 
-   Create the `showPage` function to hide all of the items in the 
-   list except for the ten you want to show.
+/*
+   Temporary for loop to number students to confirm pagination is
+   0-9,10-19,20-29 etc.
+*/
+for (let i = 0; i < studentName.length; i++) {
+  let studentNumber = i + 1;
+  let currentStudent = studentName[i].textContent;
+  studentName[i].textContent = studentNumber + ") " + currentStudent;
+}
+/*
+   This function accepts the current active page and shows only students in that range
+*/
+function showPage(activePage) {
+  const students = document.getElementsByClassName("student-item");
+  let startingIndex = activePage * 10 - 10;
+  let endingIndex = activePage * 10 - 1;
 
-   Pro Tips: 
-     - Keep in mind that with a list of 54 students, the last page 
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when 
-       you initially define the function, and it acts as a variable 
-       or a placeholder to represent the actual function `argument` 
-       that will be passed into the parens later when you call or 
-       "invoke" the function 
-***/
-function showPage() {
-  for (let i = 0; i < studentList.length; i++) {
-    studentList[i].style.display = "none";
+  if (activePage === 1) {
+    // unhide active list
+    for (let i = 0; i < endingIndex; i++) {
+      students[i].style.display = "";
+    }
+    // hide rest of students
+    for (let i = endingIndex; i < students.length; i++) {
+      students[i].style.display = "none";
+    }
+  } else {
+    startingIndex = activePage * 10 - 11;
+    endingIndex = activePage * 10 - 1;
+    if (endingIndex > students.length - 1) {
+      for (let i = 0; i < startingIndex; i++) {
+        students[i].style.display = "none";
+      }
+      for (let i = startingIndex; i < students.length; i++) {
+        students[i].style.display = "";
+      }
+    } else {
+      for (let i = startingIndex; i < endingIndex; i++) {
+        students[i].style.display = "";
+      }
+      for (let i = 0; i < startingIndex; i++) {
+        students[i].style.display = "none";
+      }
+      for (let i = endingIndex; i < students.length; i++) {
+        students[i].style.display = "none";
+      }
+    }
   }
 }
 
@@ -42,19 +73,18 @@ function showPage() {
    Function to append pagination links to bottom of main page div.
 */
 function appendPageLinks() {
-  console.log("appendPageLinks() was called.");
   if (document.querySelector(".pagination") !== null) {
+    // confirm we are removing the existing pagination before adding new div
     mainPage.removeChild(document.querySelector(".pagination"));
-    console.log("Removed pagination.");
   }
   const div = document.createElement("div");
   const ul = document.createElement("ul");
   const li = document.createElement("li");
   let count = 0;
-
   for (let i = 0; i < studentList.length; i += 10) {
     const a = document.createElement("a");
     count++;
+
     a.href = "#";
     if (count === 1) {
       a.className = "active";
@@ -62,14 +92,12 @@ function appendPageLinks() {
     a.textContent = count;
     li.appendChild(a);
     ul.appendChild(li);
-
-    // studentList[i].style.display = "none";
   }
 
   div.appendChild(ul);
   div.className = "pagination";
   mainPage.appendChild(div);
+  showPage(Number(document.querySelector(".active").textContent));
 }
-appendPageLinks();
 appendPageLinks();
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
