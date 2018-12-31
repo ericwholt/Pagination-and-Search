@@ -16,25 +16,26 @@ FSJS project 2 - List Filter and Pagination
    scoped to that function.
 ***/
 const mainPage = document.querySelector(".page");
-const studentList = document.getElementsByTagName("li");
+const pageHeader = mainPage.firstElementChild;
 const studentName = document.getElementsByTagName("h3");
+const students = document.getElementsByClassName("student-item");
 
 /*
    Temporary for loop to number students to confirm pagination is
    0-9,10-19,20-29 etc.
 */
 for (let i = 0; i < studentName.length; i++) {
-  let studentNumber = i + 1;
-  let currentStudent = studentName[i].textContent;
+  const studentNumber = i + 1;
+  const currentStudent = studentName[i].textContent;
+
   studentName[i].textContent = studentNumber + ") " + currentStudent;
 }
 /*
    This function accepts the current active page and shows only students in that range
 */
-function showPage(activePage) {
-  const students = document.getElementsByClassName("student-item");
+function showPage(students, activePage) {
   let startingIndex = activePage * 10 - 10;
-  let endingIndex = activePage * 10 - 1;
+  let endingIndex = activePage * 10;
 
   if (activePage === 1) {
     // unhide active list
@@ -46,8 +47,8 @@ function showPage(activePage) {
       students[i].style.display = "none";
     }
   } else {
-    startingIndex = activePage * 10 - 11;
-    endingIndex = activePage * 10 - 1;
+    startingIndex = activePage * 10 - 10;
+    endingIndex = activePage * 10;
     if (endingIndex > students.length - 1) {
       for (let i = 0; i < startingIndex; i++) {
         students[i].style.display = "none";
@@ -72,7 +73,10 @@ function showPage(activePage) {
 /* 
    Function to append pagination links to bottom of main page div.
 */
-function appendPageLinks() {
+function appendPageLinks(students) {
+  if (students.length < 10) {
+    return;
+  }
   if (document.querySelector(".pagination") !== null) {
     // confirm we are removing the existing pagination before adding new div
     mainPage.removeChild(document.querySelector(".pagination"));
@@ -81,7 +85,7 @@ function appendPageLinks() {
   const ul = document.createElement("ul");
   const li = document.createElement("li");
   let count = 0;
-  for (let i = 0; i < studentList.length; i += 10) {
+  for (let i = 0; i < students.length; i += 10) {
     const a = document.createElement("a");
     count++;
 
@@ -97,11 +101,26 @@ function appendPageLinks() {
   div.appendChild(ul);
   div.className = "pagination";
   mainPage.appendChild(div);
-  showPage(Number(document.querySelector(".active").textContent));
+  showPage(students, Number(document.querySelector(".active").textContent));
 }
-appendPageLinks();
+
+/*
+   Function to append search html to page.
+*/
+function appendSearchField() {
+  const div = document.createElement("div");
+  const input = document.createElement("input");
+  const button = document.createElement("button");
+  div.className = "student-search";
+  input.placeholder = "Search for students...";
+  button.textContent = "Search";
+  div.appendChild(input);
+  div.appendChild(button);
+  pageHeader.appendChild(div);
+}
+appendSearchField();
+appendPageLinks(students);
 const paginationDiv = document.querySelector(".pagination");
-// Remember to delete the comments that came with this file, and replace them with your own code comments.
 paginationDiv.addEventListener("click", e => {
   e.preventDefault();
   const links = document.getElementsByTagName("a");
@@ -109,5 +128,12 @@ paginationDiv.addEventListener("click", e => {
     links[i].className = "";
   }
   e.target.className = "active";
-  showPage(Number(e.target.textContent));
+  showPage(students, Number(e.target.textContent));
+});
+
+mainPage.addEventListener("click", e => {
+  if (e.target.tagName === "BUTTON") {
+    const input = document.querySelector("input");
+    console.log(input.value);
+  }
 });
