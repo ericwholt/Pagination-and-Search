@@ -5,7 +5,7 @@ FSJS project 2 - List Filter and Pagination
 
 const mainPage = document.querySelector(".page");
 const students = document.querySelectorAll(".student-item"); // This is used to build the array below, hide all students in showPage function, and in search function to build filtered studentList.
-let studentList = Array.apply(null, students); //Initially load studentList array this array will be changed as searched field is used
+let studentList = Array.from(students); //Initially load studentList array this array will be changed as searched field is used
 
 /*
   Description for showPage()
@@ -59,6 +59,7 @@ function appendPageLinks(list, activePage) {
   if (list.length < 11 && list.length > 0) {
     return 1;
   } else if (list.length === 0) {
+    // if no results found then display no results message
     const div = document.createElement("div");
     div.className = "pagination";
     const h1 = document.createElement("h1");
