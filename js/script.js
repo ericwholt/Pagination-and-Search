@@ -54,14 +54,22 @@ function appendPageLinks(list, activePage) {
   if (activePage === undefined || activePage === null) {
     activePage = 1;
   }
+
   //If list is 10 or below then return without adding pagination
-  if (list.length < 11) {
+  if (list.length < 11 && list.length > 0) {
+    return 1;
+  } else if (list.length === 0) {
+    const div = document.createElement("div");
+    div.className = "pagination";
+    const h1 = document.createElement("h1");
+    h1.textContent = "No results have been found";
+    div.appendChild(h1);
+    mainPage.appendChild(div);
     return 1;
   }
-
-  const numberOfPages = Math.ceil(list.length / 10);
   const div = document.createElement("div");
   div.className = "pagination";
+  const numberOfPages = Math.ceil(list.length / 10);
   const ul = document.createElement("ul");
   const li = document.createElement("li");
 
