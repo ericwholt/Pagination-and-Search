@@ -8,7 +8,10 @@ const students = document.querySelectorAll(".student-item"); // This is used to 
 let studentList = Array.apply(null, students); //Initially load studentList array this array will be changed as searched field is used
 
 /*
-   This function accepts the current active page and shows only students in that range
+  Description for showPage()
+  Parameter 'list' takes an array
+  Parameter 'activePage' takes a number. 
+  Function hides all student elements on page and then shows a max of 10 elements
 */
 function showPage(list, activePage) {
   let visableListStop = activePage * 10;
@@ -33,9 +36,15 @@ function showPage(list, activePage) {
   }
 }
 
-/* 
-   Function to append pagination links to bottom of main page div.
-   Parameters require an array of elements and the current active page.
+/*
+  Description for appendPageLinks()
+  Parameter 'list' takes an array
+  Parameter 'activePage' takes a number. 
+  Function divides the number of elements by 10 and rounds up to get the
+  number of pages. Creates div, ul, and li. It then add links for each page
+  to the li's and sets active class to activePage link. It adds the li to 
+  the ul. We then add the ul to divs and adds div to mainPage. Finally it
+  returns the current active page as a number.
 */
 function appendPageLinks(list, activePage) {
   // Check to see if div exist and remove it if does.
@@ -76,7 +85,7 @@ function appendPageLinks(list, activePage) {
 
 showPage(studentList, appendPageLinks(studentList, 1)); // Build our initial page with pagination links.
 
-const paginationDiv = document.querySelector(".pagination"); // Declared after pagination div has been inserted
+const paginationDiv = document.querySelector(".pagination"); // Instantiate after pagination div has been inserted
 
 mainPage.addEventListener("click", e => {
   e.preventDefault();
@@ -93,6 +102,7 @@ mainPage.addEventListener("click", e => {
 });
 
 /*
+   Description for appendSearchField()
    Functionality for searching students.
    First we add the search field to the page.
    Event listeners listen for search button click and keyup events.
@@ -112,7 +122,7 @@ function appendSearchField() {
 }
 appendSearchField(); // Add search field and button to page dynamically
 
-const searchDiv = document.querySelector(".student-search"); // Declared after search div has been inserted
+const searchDiv = document.querySelector(".student-search"); // instantiate after search div has been inserted
 
 searchDiv.addEventListener("click", e => {
   if (e.target.tagName === "BUTTON") {
